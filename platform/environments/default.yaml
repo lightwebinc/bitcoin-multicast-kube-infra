@@ -1,0 +1,19 @@
+# Cluster-level shared values consumed by platform Helmfile templates.
+# Override per-environment by passing -e <name> to Helmfile.
+
+clusterCIDR: "10.244.0.0/16"
+clusterCIDRv6: "fd20:0:0:1::/64"
+serviceCIDR: "10.96.0.0/12"
+serviceCIDRv6: "fd30:0:0:1::/108"
+
+# Default fabric NIC name on every k0s node (override per-host via NADs).
+fabricIface: "enp5s0"
+
+# IPv6 multicast subnet that sits on the fabric NIC (matches the fd20::/64
+# convention used elsewhere in the bitcoin-multicast docs).
+fabricSubnet: "fd20::/64"
+
+# BGP-related toggles (Calico/Cilium); off by default.
+bgp:
+  enabled: false
+  asn: 64512

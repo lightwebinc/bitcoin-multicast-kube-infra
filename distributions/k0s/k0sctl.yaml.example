@@ -1,0 +1,43 @@
+# k0sctl cluster spec — copy to k0sctl.yaml and edit.
+#
+# Render with envsubst before applying:
+#   envsubst < k0sctl.yaml.example > k0sctl.yaml
+# (bootstrap.sh does this automatically.)
+#
+# Scale-out: add additional `- role: worker` hosts under spec.hosts.
+
+apiVersion: k0sctl.k0sproject.io/v1beta1
+kind: Cluster
+metadata:
+  name: bitcoin-multicast
+spec:
+  hosts:
+    - role: controller+worker
+      noTaints: true
+      ssh:
+        address: ${NODE0_ADDR}
+        user: ${SSH_USER}
+        keyPath: ${SSH_KEY}
+      installFlags:
+        - --enable-worker
+        - --no-taints
+
+    # - role: worker
+    #   ssh:
+    #     address: ${NODE1_ADDR}
+    #     user: ${SSH_USER}
+    #     keyPath: ${SSH_KEY}
+    #
+    # - role: worker
+    #   ssh:
+    #     address: ${NODE2_ADDR}
+    #     user: ${SSH_USER}
+    #     keyPath: ${SSH_KEY}
+
+  k0s:
+    version: "1.31.2+k0s.0"
+    dynamicConfig: false
+    configPath: /etc/k0s/k0s.yaml
+    config: !!str |
+      # See k0s-config.yaml — bootstrap.sh inlines its contents here.
+      __INLINE_K0S_CONFIG__

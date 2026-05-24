@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Static lint pass. Does not require a live cluster.
+set -euo pipefail
+
+HERE="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+ROOT="$(cd -- "${HERE}/.." && pwd)"
+cd "${ROOT}"
+
+ok=0
+fail() { echo "FAIL: $*" >&2; ok=1; }
+
+echo "==> shellcheck"
+if command -v shellcheck >/dev/null 2>&1; then
+  # SC1091: source paths only resolvable at runtime.
+  shellcheck -e SC1091 -e SC2086 \
+    distributions/k0s/bootstrap.sh \
+    distributions/k0s/teardown.sh  \
+    scripts/*.sh || fail shellcheck
+else
+  echo "  (shellcheck not installed — skipping)"
+fi
+
+echo "==> yamllint"
+if command -v yamllint >/dev/null 2>&1; then
+  # Helmfile gotmpl files are not pure YAML; exclude them.
+  yamllint -d '{extends: default, rules: {line-length: disable, document-start: disable, indentation: {spaces: 2, indent-sequences: consistent}}}' \
+    platform/namespaces.yaml \
+    platform/secrets/cluster-secret-store.example.yaml \
+    apps/environments/default.yaml \
+    apps/environments/reference-k0s.yaml \
+    apps/environments/production.yaml.example \
+    distributions/k0s/k0s-config.yaml.example \
+    || fail yamllint
+else
+  echo "  (yamllint not installed — skipping)"
+fi
+
+echo "==> helmfile lint (platform)"
+if command -v helmfile >/dev/null 2>&1; then
+  helmfile -f platform/helmfile.yaml lint || fail "helmfile platform"
+  helmfile -f apps/helmfile.yaml.gotmpl -e reference-k0s lint || fail "helmfile apps"
+else
+  echo "  (helmfile not installed — skipping)"
+fi
+
+if [[ ${ok} -ne 0 ]]; then exit 1; fi
+echo "==> lint ok"

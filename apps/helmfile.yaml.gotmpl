@@ -1,0 +1,76 @@
+# Application layer — bitcoin multicast workload composition.
+#
+# Independent of distribution: consumes only KUBECONFIG. Charts are pulled from
+# the OCI registry published by the *-helm repos.
+#
+#   helmfile -f apps/helmfile.yaml -e reference-k0s apply
+
+environments:
+  reference-k0s:
+    values:
+      - environments/default.yaml
+      - environments/reference-k0s.yaml
+  production:
+    values:
+      - environments/default.yaml
+      - environments/production.yaml
+    missingFileHandler: Error
+
+repositories:
+  - name: bitcoin-mcast
+    url: oci://ghcr.io/lightwebinc/charts
+    oci: true
+
+releases:
+  # ---------------- proxy (single Deployment, fabric-ingress node) ----------------
+  - name: proxy
+    namespace: bitcoin-mcast
+    chart: oci://ghcr.io/lightwebinc/charts/bitcoin-shard-proxy
+    version: {{ .Values.chartVersions.proxy | quote }}
+    labels:
+      app: proxy
+    values:
+      - values/proxy.yaml.gotmpl
+
+  # ---------------- listener (DaemonSet on labeled fabric nodes) ------------------
+  - name: listener
+    namespace: bitcoin-mcast
+    chart: oci://ghcr.io/lightwebinc/charts/bitcoin-shard-listener
+    version: {{ .Values.chartVersions.listener | quote }}
+    labels:
+      app: listener
+    values:
+      - values/listener.yaml.gotmpl
+
+  # ---------------- retry endpoints (per-node releases) ---------------------------
+  {{- range $i, $r := .Values.retryEndpoints }}
+  - name: retry-{{ $r.name }}
+    namespace: bitcoin-mcast
+    chart: oci://ghcr.io/lightwebinc/charts/bitcoin-retry-endpoint
+    version: {{ $.Values.chartVersions.retryEndpoint | quote }}
+    labels:
+      app: retry-endpoint
+      node: {{ $r.name }}
+    values:
+      - values/retry-endpoint.yaml.gotmpl
+    set:
+      - name: config.nackAddr
+        value: {{ $r.nackAddr | quote }}
+      - name: config.beaconTier
+        value: {{ $r.tier }}
+      - name: config.beaconPreference
+        value: {{ $r.preference }}
+      - name: nodeSelector.bitcoin-mcast/node
+        value: {{ $r.name | quote }}
+  {{- end }}
+
+  # ---------------- subtx-generator (load-test, optional) -------------------------
+  - name: subtx-gen
+    namespace: bitcoin-mcast
+    chart: oci://ghcr.io/lightwebinc/charts/bitcoin-subtx-generator
+    version: {{ .Values.chartVersions.subtxGenerator | quote }}
+    installed: {{ .Values.subtxGenerator.enabled }}
+    labels:
+      app: subtx-generator
+    values:
+      - values/subtx-generator.yaml.gotmpl

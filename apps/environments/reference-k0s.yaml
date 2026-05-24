@@ -1,0 +1,23 @@
+# Known-good values for the k0s reference deployment.
+# Single fabric NIC, 4 shard groups, site-scoped multicast.
+
+shared:
+  shardBits: 2
+  mcScope: "site"
+  mcGroupId: "0x000B"
+  dataPort: 9001
+  fabricIface: "enp5s0"
+
+# Per-pod fabric IPv6s for the macvlan secondary attachment.
+fabricAddrs:
+  proxy: "fd20::20/64"
+  # DaemonSet pods receive a per-node IP via the chart's fabricIPv6 value;
+  # for the reference deployment we use a node-label-driven mapping. See
+  # docs/networking.md for the cloud-friendly alternative.
+  listener: "fd20::21/64"
+
+# Smaller subtx-gen burst for a single-node lab.
+subtxGenerator:
+  enabled: false
+  pps: 500
+  duration: "15s"

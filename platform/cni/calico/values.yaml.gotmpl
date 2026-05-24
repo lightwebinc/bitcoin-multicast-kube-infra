@@ -1,0 +1,30 @@
+# Calico via the tigera-operator chart.
+#
+# The chart installs the Operator; the Operator then installs Calico components
+# according to the Installation CR below.
+installation:
+  enabled: true
+  cni:
+    type: Calico
+  calicoNetwork:
+    bgp: {{ .Values.bgp.enabled | quote }}
+    ipPools:
+      - name: default-ipv4
+        cidr: {{ .Values.clusterCIDR }}
+        encapsulation: VXLAN
+        natOutgoing: Enabled
+        nodeSelector: all()
+      - name: default-ipv6
+        cidr: {{ .Values.clusterCIDRv6 }}
+        encapsulation: None
+        natOutgoing: Disabled
+        nodeSelector: all()
+    nodeAddressAutodetectionV4:
+      firstFound: true
+    nodeAddressAutodetectionV6:
+      firstFound: true
+
+# When BGP is enabled, the operator publishes the cluster CIDRs over BGP. The
+# fabric NIC is reserved for multicast (Multus secondary), so BGP peers are
+# expected on the primary CNI NIC. Configure peers via separate BGPPeer CRs
+# applied after this chart settles — see docs/networking.md.

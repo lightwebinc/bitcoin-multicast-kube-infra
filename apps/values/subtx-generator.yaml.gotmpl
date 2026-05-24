@@ -1,0 +1,20 @@
+# bitcoin-subtx-generator values — load-test client, opt-in.
+mode: {{ .Values.subtxGenerator.mode | quote }}
+workloadType: {{ .Values.subtxGenerator.workloadType | quote }}
+
+args:
+  addr: "[fd20::20]:9000"      # proxy ingress; matches fabricAddrs.proxy
+
+subtxGen:
+  shardBits: {{ .Values.shared.shardBits }}
+  pps: {{ .Values.subtxGenerator.pps }}
+  duration: {{ .Values.subtxGenerator.duration | quote }}
+  payloadSize: 512
+
+job:
+  completions: 1
+  parallelism: 1
+  ttlSecondsAfterFinished: 600
+
+networking:
+  mode: "pod"          # generator is a pure UDP client, no multicast required

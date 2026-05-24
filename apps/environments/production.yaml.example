@@ -1,0 +1,27 @@
+# Production overrides. Copy to production.yaml (gitignored) and edit.
+#
+# Required adjustments before first apply:
+#   - shared.fabricIface: real NIC name on production hosts
+#   - retryEndpoints[*].nackAddr: per-node fabric IPv6
+#   - chartVersions: pin to the released versions you intend to run
+
+shared:
+  shardBits: 8                    # 256 groups for production scale
+  fabricIface: "REPLACE_ME"
+
+retryEndpoints:
+  - name: "retry-1"
+    nackAddr: "REPLACE_ME"
+    tier: 0
+    preference: 128
+  - name: "retry-2"
+    nackAddr: "REPLACE_ME"
+    tier: 0
+    preference: 64
+  - name: "retry-3"
+    nackAddr: "REPLACE_ME"
+    tier: 1
+    preference: 128
+
+subtxGenerator:
+  enabled: false

@@ -1,0 +1,38 @@
+name: lint
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+concurrency:
+  group: lint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install yamllint + shellcheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yamllint shellcheck
+
+      - name: Install helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.16.2
+
+      - name: Install helmfile
+        run: |
+          curl -sSL -o /tmp/helmfile.tgz \
+            https://github.com/helmfile/helmfile/releases/download/v0.169.1/helmfile_0.169.1_linux_amd64.tar.gz
+          tar -xzf /tmp/helmfile.tgz -C /tmp helmfile
+          sudo mv /tmp/helmfile /usr/local/bin/helmfile
+          helmfile init --force
+          helm plugin install https://github.com/databus23/helm-diff || true
+
+      - name: Run lint
+        run: ./scripts/lint.sh

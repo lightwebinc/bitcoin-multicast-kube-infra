@@ -1,0 +1,36 @@
+# bitcoin-shard-listener values — DaemonSet on labeled fabric nodes.
+workloadType: DaemonSet
+
+config:
+  multicastIf: {{ .Values.shared.fabricIface | quote }}
+  shardBits: {{ .Values.shared.shardBits }}
+  mcScope: {{ .Values.shared.mcScope | quote }}
+  mcGroupId: {{ .Values.shared.mcGroupId | quote }}
+  listenPort: {{ .Values.shared.dataPort }}
+  retryEndpoints: >-
+    {{- $eps := list -}}
+    {{- range .Values.retryEndpoints -}}
+      {{- $eps = append $eps (printf "[%s]:%d" .nackAddr (int $.Values.shared.beaconPort)) -}}
+    {{- end -}}
+    {{ join "," $eps }}
+  beaconPort: {{ .Values.shared.beaconPort }}
+  beaconScope: {{ .Values.shared.mcScope | quote }}
+  # numWorkers is hardcoded to 1 by the chart (SO_REUSEPORT mcast duplication).
+
+networking:
+  mode: {{ .Values.networkingMode | quote }}
+  multus:
+    networkName: {{ .Values.multus.networkName | quote }}
+    namespace: {{ .Values.namespace | quote }}
+    # Per-pod IPv6: each DaemonSet pod inherits its node's fabric address via
+    # the chart's downward-API integration. Override per-node if needed.
+    fabricIPv6: {{ .Values.fabricAddrs.listener | default "" | quote }}
+    interface: net1
+
+nodeSelector:
+  bitcoin-mcast/role: "listener"
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: false

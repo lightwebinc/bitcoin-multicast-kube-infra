@@ -1,0 +1,30 @@
+# Cilium values — primary CNI replacement.
+#
+# k0s sets `provider: custom` so kube-proxy is NOT installed by k0s; Cilium
+# replaces it. Adjust if running with kube-proxy enabled.
+
+kubeProxyReplacement: true
+
+ipam:
+  mode: cluster-pool
+  operator:
+    clusterPoolIPv4PodCIDRList:
+      - {{ .Values.clusterCIDR }}
+    clusterPoolIPv6PodCIDRList:
+      - {{ .Values.clusterCIDRv6 }}
+
+ipv4:
+  enabled: true
+ipv6:
+  enabled: true
+
+bgpControlPlane:
+  enabled: {{ .Values.bgp.enabled }}
+
+operator:
+  replicas: 1
+
+# Multus coexistence: leave Cilium as the primary CNI; macvlan via Multus on the
+# fabric NIC is unaffected.
+cni:
+  exclusive: false

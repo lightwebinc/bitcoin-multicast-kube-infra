@@ -1,0 +1,24 @@
+# Local state — never commit
+.kube/
+*.kubeconfig
+kubeconfig*
+
+# Operator-specific configuration (start from .example variants)
+hosts.env
+k0sctl.yaml
+k0s-config.yaml
+*.local.yaml
+production.yaml
+secrets/
+*.local.env
+
+# Helm / Helmfile artefacts
+.helmfile/
+charts/
+*.tgz
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp

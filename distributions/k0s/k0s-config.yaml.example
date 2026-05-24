@@ -1,0 +1,32 @@
+# k0s ClusterConfig — copy to k0s-config.yaml and edit.
+#
+# bootstrap.sh inlines this file into k0sctl.yaml under spec.k0s.config.
+#
+# `provider: custom` means k0s does NOT install a built-in CNI; the platform
+# layer (`make platform CNI=calico|cilium`) installs one explicitly. Set
+# `provider: kuberouter` (and `make platform CNI=kube-router`) if you want the
+# k0s-bundled CNI.
+
+apiVersion: k0s.k0sproject.io/v1beta1
+kind: ClusterConfig
+metadata:
+  name: k0s
+spec:
+  network:
+    provider: custom
+    podCIDR: 10.244.0.0/16
+    serviceCIDR: 10.96.0.0/12
+    dualStack:
+      enabled: true
+      IPv6podCIDR: "fd20:0:0:1::/64"
+      IPv6serviceCIDR: "fd30:0:0:1::/108"
+    kubeProxy:
+      mode: iptables
+  telemetry:
+    enabled: false
+  extensions:
+    helm:
+      # We drive Helm releases from the workstation (Helmfile) to keep the
+      # distribution-agnostic contract clean. Leave this empty.
+      charts: []
+      repositories: []

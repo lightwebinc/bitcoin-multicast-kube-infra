@@ -1,0 +1,50 @@
+# Shared baseline values for the application layer.
+# Per-environment files override or extend these.
+
+namespace: bitcoin-mcast
+
+# Pinned chart versions. Bump in lockstep when releasing new chart artefacts.
+chartVersions:
+  proxy: "0.1.0"
+  listener: "0.1.0"
+  retryEndpoint: "0.1.0"
+  subtxGenerator: "0.1.0"
+
+# Wire-protocol shared parameters — must agree across all four components.
+# See bitcoin-multicast/containerization/composition-spec.md.
+shared:
+  shardBits: 2
+  mcScope: "site"
+  mcGroupId: "0x000B"
+  dataPort: 9001
+  beaconPort: 9300
+  fabricIface: "enp5s0"
+
+# Networking mode for the workload pods (chart value `networking.mode`).
+networkingMode: "multus"
+multus:
+  networkName: "mcast-fabric"
+
+# Fabric IPv6 of every fabric node. The listener DaemonSet uses these to
+# populate RETRY_ENDPOINTS via Helm rendering.
+retryEndpoints:
+  - name: "retry-1"
+    nackAddr: "fd20::24"
+    tier: 0
+    preference: 128
+  - name: "retry-2"
+    nackAddr: "fd20::25"
+    tier: 0
+    preference: 64
+  - name: "retry-3"
+    nackAddr: "fd20::26"
+    tier: 1
+    preference: 128
+
+# Subtx generator: disabled by default; enable for load testing.
+subtxGenerator:
+  enabled: false
+  mode: "subtx-gen"
+  workloadType: "Job"
+  pps: 1000
+  duration: "30s"

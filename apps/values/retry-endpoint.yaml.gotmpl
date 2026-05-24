@@ -1,0 +1,26 @@
+# bitcoin-retry-endpoint per-node release values.
+# Helmfile sets config.nackAddr / beaconTier / beaconPreference / nodeSelector
+# from environments/default.yaml retryEndpoints[].
+config:
+  mcIface: {{ .Values.shared.fabricIface | quote }}
+  shardBits: {{ .Values.shared.shardBits }}
+  mcScope: {{ .Values.shared.mcScope | quote }}
+  mcGroupId: {{ .Values.shared.mcGroupId | quote }}
+  listenPort: {{ .Values.shared.dataPort }}
+  nackPort: {{ .Values.shared.beaconPort }}
+  beaconEnabled: true
+  cacheBackend: "memory"
+  # Override to "redis" + supply redisAddr in production.
+
+networking:
+  mode: {{ .Values.networkingMode | quote }}
+  multus:
+    networkName: {{ .Values.multus.networkName | quote }}
+    namespace: {{ .Values.namespace | quote }}
+    interface: net1
+    # fabricIPv6 derived from config.nackAddr by the chart.
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: false

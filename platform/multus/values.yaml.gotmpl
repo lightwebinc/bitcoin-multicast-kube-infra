@@ -1,0 +1,14 @@
+# Multus — k8snetworkplumbingwg/multus chart.
+#
+# Installs the Multus DaemonSet into kube-system. Pods request secondary
+# interfaces via the `k8s.v1.cni.cncf.io/networks` annotation; the
+# NetworkAttachmentDefinitions live under platform/nads/.
+
+namespace: kube-system
+
+# Use the thick plugin (recommended on k0s); the thin plugin requires CNI binary
+# access that varies between distributions.
+image:
+  pullPolicy: IfNotPresent
+
+# Leave defaults for socket dirs — the chart auto-detects.

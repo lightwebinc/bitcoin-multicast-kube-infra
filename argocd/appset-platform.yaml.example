@@ -1,0 +1,44 @@
+# ArgoCD ApplicationSet — platform addons (stub).
+# Operator-supplied; not applied by this repo's tooling yet.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: bitcoin-mcast-platform
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - name: calico
+            chart: tigera-operator
+            repoURL: https://docs.tigera.io/calico/charts
+            targetRevision: v3.28.2
+            namespace: kube-system
+          - name: multus
+            chart: multus
+            repoURL: https://k8snetworkplumbingwg.github.io/helm-charts
+            targetRevision: 0.0.4
+            namespace: kube-system
+          - name: external-secrets
+            chart: external-secrets
+            repoURL: https://charts.external-secrets.io
+            targetRevision: 0.10.5
+            namespace: external-secrets
+  template:
+    metadata:
+      name: 'platform-{{name}}'
+    spec:
+      project: default
+      source:
+        repoURL: '{{repoURL}}'
+        chart: '{{chart}}'
+        targetRevision: '{{targetRevision}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{namespace}}'
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

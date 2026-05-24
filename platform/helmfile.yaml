@@ -1,0 +1,74 @@
+# Platform layer — installed once per cluster, distribution-agnostic.
+#
+# Selectors keep this file declarative across CNI choices:
+#   helmfile -f platform/helmfile.yaml --selector cni={{ env "CNI" | default "calico" }} apply
+#   helmfile -f platform/helmfile.yaml --selector layer=core apply
+#
+# scripts/platform-apply.sh runs these in the right order.
+
+environments:
+  default:
+    values:
+      - environments/default.yaml
+
+repositories:
+  - name: projectcalico
+    url: https://docs.tigera.io/calico/charts
+  - name: cilium
+    url: https://helm.cilium.io
+  - name: k8snetworkplumbingwg
+    url: https://k8snetworkplumbingwg.github.io/helm-charts
+  - name: external-secrets
+    url: https://charts.external-secrets.io
+
+releases:
+  # ------------------------------------------------------------------ CNI
+  - name: calico
+    namespace: kube-system
+    chart: projectcalico/tigera-operator
+    version: v3.28.2
+    labels:
+      cni: calico
+      layer: cni
+    values:
+      - cni/calico/values.yaml.gotmpl
+
+  - name: cilium
+    namespace: kube-system
+    chart: cilium/cilium
+    version: 1.16.3
+    labels:
+      cni: cilium
+      layer: cni
+    values:
+      - cni/cilium/values.yaml.gotmpl
+
+  # kube-router has no separate Helm install — it's enabled via k0s-config.yaml
+  # (provider: kuberouter). Selecting CNI=kube-router skips the CNI install
+  # entirely; see cni/kube-router/README.md.
+
+  # ------------------------------------------------------------- Multus
+  - name: multus
+    namespace: kube-system
+    chart: k8snetworkplumbingwg/multus
+    version: 0.0.4
+    labels:
+      layer: multus
+    values:
+      - multus/values.yaml.gotmpl
+    needs:
+      - kube-system/calico
+      - kube-system/cilium
+    # `needs` only applies when the referenced release is selected; safe under
+    # any CNI selector.
+
+  # ------------------------------------------------------------- External Secrets
+  - name: external-secrets
+    namespace: external-secrets
+    chart: external-secrets/external-secrets
+    version: 0.10.5
+    createNamespace: true
+    labels:
+      layer: secrets
+    values:
+      - secrets/external-secrets/values.yaml.gotmpl

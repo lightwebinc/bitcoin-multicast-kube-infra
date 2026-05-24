@@ -1,0 +1,28 @@
+# bitcoin-shard-proxy values
+config:
+  multicastIf: {{ .Values.shared.fabricIface | quote }}
+  shardBits: {{ .Values.shared.shardBits }}
+  mcScope: {{ .Values.shared.mcScope | quote }}
+  mcGroupId: {{ .Values.shared.mcGroupId | quote }}
+  egressPort: {{ .Values.shared.dataPort }}
+  udpListenPort: 9000
+  numWorkers: 2
+
+networking:
+  mode: {{ .Values.networkingMode | quote }}
+  multus:
+    networkName: {{ .Values.multus.networkName | quote }}
+    namespace: {{ .Values.namespace | quote }}
+    fabricIPv6: {{ .Values.fabricAddrs.proxy | default "" | quote }}
+    interface: net1
+
+nodeSelector:
+  bitcoin-mcast/role: "proxy"
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: false
+
+podDisruptionBudget:
+  enabled: false

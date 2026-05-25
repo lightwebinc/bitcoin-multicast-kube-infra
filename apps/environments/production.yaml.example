@@ -6,7 +6,7 @@
 #   - chartVersions: pin to the released versions you intend to run
 
 shared:
-  shardBits: 8                    # 256 groups for production scale
+  shardBits: 2                    # 4 groups (default); raise for higher shard fan-out
   fabricIface: "REPLACE_ME"
 
 retryEndpoints:

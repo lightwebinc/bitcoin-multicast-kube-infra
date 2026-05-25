@@ -37,7 +37,5 @@ spec:
   k0s:
     version: "1.31.2+k0s.0"
     dynamicConfig: false
-    configPath: /etc/k0s/k0s.yaml
-    config: !!str |
-      # See k0s-config.yaml — bootstrap.sh inlines its contents here.
-      __INLINE_K0S_CONFIG__
+    config:
+__INLINE_K0S_CONFIG__

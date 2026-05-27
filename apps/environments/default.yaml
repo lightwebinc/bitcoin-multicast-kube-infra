@@ -1,7 +1,7 @@
 # Shared baseline values for the application layer.
 # Per-environment files override or extend these.
 
-namespace: bitcoin-mcast
+namespace: bsv-mcast
 
 # Pinned chart versions. Bump in lockstep when releasing new chart artefacts.
 chartVersions:
@@ -11,7 +11,7 @@ chartVersions:
   subtxGenerator: "0.1.0"
 
 # Wire-protocol shared parameters — must agree across all four components.
-# See bitcoin-multicast/containerization/composition-spec.md.
+# See bsv-multicast/containerization/composition-spec.md.
 shared:
   shardBits: 2
   mcScope: "site"

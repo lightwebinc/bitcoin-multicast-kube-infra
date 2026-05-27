@@ -10,7 +10,7 @@ serviceCIDRv6: "fd30:0:0:1::/108"
 fabricIface: "enp5s0"
 
 # IPv6 multicast subnet that sits on the fabric NIC (matches the fd20::/64
-# convention used elsewhere in the bitcoin-multicast docs).
+# convention used elsewhere in the bsv-multicast docs).
 fabricSubnet: "fd20::/64"
 
 # BGP-related toggles (Calico/Cilium); off by default.

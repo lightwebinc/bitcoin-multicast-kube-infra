@@ -43,7 +43,7 @@ secondary (`net1`) carries multicast data only — never scrape it.
 ```yaml
 # prometheus.yml — Kubernetes SD against the k0s API
 scrape_configs:
-  - job_name: bitcoin-mcast
+  - job_name: bsv-mcast
     kubernetes_sd_configs:
       - role: pod
         api_server: https://k0s.example.lan:6443
@@ -53,7 +53,7 @@ scrape_configs:
     relabel_configs:
       - source_labels: [__meta_kubernetes_namespace]
         action: keep
-        regex: bitcoin-mcast
+        regex: bsv-mcast
       - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
         action: keep
         regex: "true"
@@ -67,12 +67,12 @@ scrape_configs:
 The simpler `static_configs` route via Service ClusterIPs also works:
 
 ```yaml
-  - job_name: bitcoin-mcast-proxy
+  - job_name: bsv-mcast-proxy
     static_configs:
-      - targets: ['proxy.bitcoin-mcast.svc.cluster.local:9100']
-  - job_name: bitcoin-mcast-listener
+      - targets: ['proxy.bsv-mcast.svc.cluster.local:9100']
+  - job_name: bsv-mcast-listener
     static_configs:
-      - targets: ['listener.bitcoin-mcast.svc.cluster.local:9100']
+      - targets: ['listener.bsv-mcast.svc.cluster.local:9100']
 ```
 
 The charts ship `ServiceMonitor` templates (gated by

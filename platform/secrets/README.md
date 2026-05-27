@@ -37,18 +37,18 @@ apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
   name: retry-redis
-  namespace: bitcoin-mcast
+  namespace: bsv-mcast
 spec:
   refreshInterval: 1h
   secretStoreRef:
-    name: bitcoin-mcast-secret-store
+    name: bsv-mcast-secret-store
     kind: ClusterSecretStore
   target:
     name: retry-redis-password
   data:
     - secretKey: password
       remoteRef:
-        key: bitcoin-mcast/redis
+        key: bsv-mcast/redis
         property: password
 ```
 

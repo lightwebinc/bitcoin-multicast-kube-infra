@@ -3,7 +3,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: bitcoin-mcast-retry
+  name: bsv-mcast-retry
   namespace: argocd
 spec:
   generators:
@@ -28,7 +28,7 @@ spec:
       project: default
       source:
         repoURL: oci://ghcr.io/lightwebinc/charts
-        chart: bitcoin-retry-endpoint
+        chart: retry-endpoint
         targetRevision: "0.1.0"
         helm:
           values: |
@@ -37,10 +37,10 @@ spec:
               beaconTier: {{tier}}
               beaconPreference: {{preference}}
             nodeSelector:
-              bitcoin-mcast/node: "{{node}}"
+              bsv-mcast/node: "{{node}}"
       destination:
         server: https://kubernetes.default.svc
-        namespace: bitcoin-mcast
+        namespace: bsv-mcast
       syncPolicy:
         automated:
           prune: true

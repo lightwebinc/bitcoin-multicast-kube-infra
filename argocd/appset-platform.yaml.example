@@ -3,7 +3,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: bitcoin-mcast-platform
+  name: bsv-mcast-platform
   namespace: argocd
 spec:
   generators:

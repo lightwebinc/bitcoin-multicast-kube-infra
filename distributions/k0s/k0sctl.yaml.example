@@ -9,7 +9,7 @@
 apiVersion: k0sctl.k0sproject.io/v1beta1
 kind: Cluster
 metadata:
-  name: bitcoin-multicast
+  name: bsv-multicast
 spec:
   hosts:
     - role: controller+worker

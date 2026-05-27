@@ -1,4 +1,4 @@
-# bitcoin-shard-proxy values
+# shard-proxy values
 config:
   multicastIf: {{ .Values.shared.fabricIface | quote }}
   shardBits: {{ .Values.shared.shardBits }}
@@ -17,7 +17,7 @@ networking:
     interface: net1
 
 nodeSelector:
-  bitcoin-mcast/role: "proxy"
+  bsv-mcast/role: "proxy"
 
 metrics:
   enabled: true

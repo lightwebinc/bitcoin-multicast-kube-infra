@@ -45,8 +45,8 @@ See [`../distributions/common.md`](../distributions/common.md). Summary:
 
 ## Application layer
 
-`apps/helmfile.yaml` installs the four bitcoin charts (`bitcoin-shard-proxy`,
-`bitcoin-shard-listener`, `bitcoin-retry-endpoint`, `bitcoin-subtx-generator`)
+`apps/helmfile.yaml` installs the four bitcoin charts (`shard-proxy`,
+`shard-listener`, `retry-endpoint`, `subtx-generator`)
 from OCI. Per-node retry-endpoint releases are generated from the values list,
 matching `composition-spec.md` Option A in the upstream docs.
 
@@ -60,6 +60,6 @@ and the listener DaemonSet automatically schedules onto the new nodes.
 
 ## Cross-references
 
-- [`bitcoin-multicast/containerization/`](https://github.com/lightwebinc/bitcoin-multicast/tree/main/containerization) — design rationale.
-- [`bitcoin-multicast/containerization/k0s-deployment.md`](https://github.com/lightwebinc/bitcoin-multicast/blob/main/containerization/k0s-deployment.md) — the reference architecture this repo implements.
-- [`bitcoin-multicast/containerization/composition-spec.md`](https://github.com/lightwebinc/bitcoin-multicast/blob/main/containerization/composition-spec.md) — operator wiring patterns.
+- [`bsv-multicast/containerization/`](https://github.com/lightwebinc/bsv-multicast/tree/main/containerization) — design rationale.
+- [`bsv-multicast/containerization/k0s-deployment.md`](https://github.com/lightwebinc/bsv-multicast/blob/main/containerization/k0s-deployment.md) — the reference architecture this repo implements.
+- [`bsv-multicast/containerization/composition-spec.md`](https://github.com/lightwebinc/bsv-multicast/blob/main/containerization/composition-spec.md) — operator wiring patterns.

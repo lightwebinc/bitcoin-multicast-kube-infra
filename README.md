@@ -1,8 +1,8 @@
-# bitcoin-multicast-kube-infra
+# multicast-kube-infra
 
 Kubernetes deployment infrastructure for the Bitcoin multicast transaction-distribution stack
-(`bitcoin-shard-proxy`, `bitcoin-shard-listener`, `bitcoin-retry-endpoint`,
-`bitcoin-subtx-generator`).
+(`shard-proxy`, `shard-listener`, `retry-endpoint`,
+`subtx-generator`).
 
 This repo is **distribution-agnostic**: the cluster bring-up lives under
 `distributions/<dist>/`, while the platform addons (`platform/`) and the application
@@ -70,4 +70,4 @@ credentials) are kept out of Git via `*.example` templates and `.gitignore`.
 - [`docs/quickstart-k0s.md`](docs/quickstart-k0s.md) — 10-minute walkthrough
 - [`docs/networking.md`](docs/networking.md) — Multus, CNI choices, BGP-ready notes
 - [`docs/operations.md`](docs/operations.md) — day-2 (upgrade, scale-out, drain)
-- Upstream architecture: [`bitcoin-multicast/containerization/`](https://github.com/lightwebinc/bitcoin-multicast/tree/main/containerization)
+- Upstream architecture: [`bsv-multicast/containerization/`](https://github.com/lightwebinc/bsv-multicast/tree/main/containerization)

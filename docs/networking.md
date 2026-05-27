@@ -61,14 +61,14 @@ net.ipv6.conf.all.force_mld_version = 2
 ```
 
 `distributions/k0s/bootstrap.sh` applies these via SSH and persists them under
-`/etc/sysctl.d/80-bitcoin-mcast.conf`.
+`/etc/sysctl.d/80-bsv-mcast.conf`.
 
 ## NACK source-address pitfall
 
 The retry endpoint must bind its NACK socket to the **same** IPv6 the listener
 addresses it by, otherwise SLAAC source-address selection causes ACKs to be
 silently dropped (see the upstream
-[`bitcoin-retry-endpoint` README](https://github.com/lightwebinc/bitcoin-retry-endpoint)).
+[`retry-endpoint` README](https://github.com/lightwebinc/retry-endpoint)).
 The chart pattern enforced by `apps/helmfile.yaml` sets `config.nackAddr`
 explicitly per release — do not leave it empty.
 

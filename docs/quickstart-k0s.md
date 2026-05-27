@@ -14,7 +14,7 @@ the bottom.
 ## 1. Configure
 
 ```bash
-cd bitcoin-multicast-kube-infra
+cd multicast-kube-infra
 
 cp distributions/k0s/hosts.example.env       distributions/k0s/hosts.env
 cp distributions/k0s/k0sctl.yaml.example     distributions/k0s/k0sctl.yaml
@@ -49,7 +49,7 @@ make verify
 
 ```bash
 export KUBECONFIG="$(pwd)/.kube/k0s.config"
-kubectl -n bitcoin-mcast get pods
+kubectl -n bsv-mcast get pods
 ```
 
 Metrics endpoints are reachable on the primary CNI port (default `9100` on

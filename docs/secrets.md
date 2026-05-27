@@ -17,7 +17,7 @@ Templates are committed with `.example` suffix.
 ## Runtime secrets — External Secrets Operator
 
 The platform layer installs ESO. A `ClusterSecretStore` named
-`bitcoin-mcast-secret-store` is shipped as a stub (no provider). Pick one:
+`bsv-mcast-secret-store` is shipped as a stub (no provider). Pick one:
 
 | Backend | When | Provider stanza |
 |---|---|---|
@@ -38,18 +38,18 @@ apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
   name: retry-redis
-  namespace: bitcoin-mcast
+  namespace: bsv-mcast
 spec:
   refreshInterval: 1h
   secretStoreRef:
-    name: bitcoin-mcast-secret-store
+    name: bsv-mcast-secret-store
     kind: ClusterSecretStore
   target:
     name: retry-redis-password
   data:
     - secretKey: password
       remoteRef:
-        key: bitcoin-mcast/redis
+        key: bsv-mcast/redis
         property: password
 ```
 

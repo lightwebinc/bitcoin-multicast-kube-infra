@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Apply bitcoin-mcast/* node labels driven by hosts.env.
+# Apply bsv-mcast/* node labels driven by hosts.env.
 # Idempotent — kubectl label --overwrite.
 set -euo pipefail
 
@@ -30,14 +30,14 @@ node_name_for() {
 label_node() {
   local node="$1" iface="$2" role_csv="$3" node_id="$4"
   echo "  ${node}: role=${role_csv} iface=${iface} node=${node_id}"
-  kubectl label node "${node}" --overwrite "bitcoin-mcast/fabric-iface=${iface}" >/dev/null
-  kubectl label node "${node}" --overwrite "bitcoin-mcast/node=${node_id}"      >/dev/null
+  kubectl label node "${node}" --overwrite "bsv-mcast/fabric-iface=${iface}" >/dev/null
+  kubectl label node "${node}" --overwrite "bsv-mcast/node=${node_id}"      >/dev/null
   IFS=',' read -ra roles <<<"${role_csv}"
   for r in "${roles[@]}"; do
-    kubectl label node "${node}" --overwrite "bitcoin-mcast/role-${r}=true" >/dev/null
+    kubectl label node "${node}" --overwrite "bsv-mcast/role-${r}=true" >/dev/null
   done
   # Also set the "primary" role label for nodeSelector (chart uses singular key).
-  kubectl label node "${node}" --overwrite "bitcoin-mcast/role=${roles[0]}" >/dev/null
+  kubectl label node "${node}" --overwrite "bsv-mcast/role=${roles[0]}" >/dev/null
 }
 
 echo "==> labeling nodes"
@@ -55,4 +55,4 @@ if [[ -n "${NODE2_ADDR:-}" ]]; then
   label_node "${n2}" "${NODE2_FABRIC_IFACE}" "listener,retry-endpoint" "retry-3"
 fi
 
-kubectl get nodes --show-labels | grep -o 'bitcoin-mcast/[^,]*' | sort -u || true
+kubectl get nodes --show-labels | grep -o 'bsv-mcast/[^,]*' | sort -u || true

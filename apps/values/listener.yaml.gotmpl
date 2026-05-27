@@ -1,4 +1,4 @@
-# bitcoin-shard-listener values — DaemonSet on labeled fabric nodes.
+# shard-listener values — DaemonSet on labeled fabric nodes.
 workloadType: DaemonSet
 
 config:
@@ -27,7 +27,7 @@ networking:
     interface: net1
 
 nodeSelector:
-  bitcoin-mcast/role: "listener"
+  bsv-mcast/role: "listener"
 
 metrics:
   enabled: true

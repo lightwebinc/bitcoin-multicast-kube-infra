@@ -17,4 +17,4 @@ deployment.
 
 - `appset-platform.yaml.example` — placeholder.
 - `appset-apps.yaml.example` — placeholder, modeled after the example in
-  `bitcoin-multicast/containerization/composition-spec.md` (Option B).
+  `bsv-multicast/containerization/composition-spec.md` (Option B).

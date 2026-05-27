@@ -61,7 +61,7 @@ apply_sysctls() {
       sysctl -w net.ipv6.conf.all.disable_ipv6=0 >/dev/null
       sysctl -w net.ipv6.conf.${iface}.disable_ipv6=0 >/dev/null
       sysctl -w net.ipv6.conf.all.force_mld_version=2 >/dev/null
-      cat > /etc/sysctl.d/80-bitcoin-mcast.conf <<EOF
+      cat > /etc/sysctl.d/80-bsv-mcast.conf <<EOF
 net.ipv6.conf.all.disable_ipv6 = 0
 net.ipv6.conf.${iface}.disable_ipv6 = 0
 net.ipv6.conf.all.force_mld_version = 2

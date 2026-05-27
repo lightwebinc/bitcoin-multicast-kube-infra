@@ -14,7 +14,7 @@
 |---|---|---|
 | Calico pods CrashLoopBackOff | `provider: kuberouter` left in `k0s-config.yaml` | Set `provider: custom`, re-bootstrap. |
 | Multus DaemonSet not Ready | k0s CNI dir mismatch on FreeBSD | k0s + Multus only validated on Linux today. |
-| `NetworkAttachmentDefinition not found` | NAD applied in wrong namespace | NADs live in `bitcoin-mcast`; chart annotation references `namespace: bitcoin-mcast`. |
+| `NetworkAttachmentDefinition not found` | NAD applied in wrong namespace | NADs live in `bsv-mcast`; chart annotation references `namespace: bsv-mcast`. |
 
 ## Applications
 
@@ -35,7 +35,7 @@
 ## Gathering logs
 
 ```bash
-kubectl -n bitcoin-mcast logs -l app.kubernetes.io/name=bitcoin-shard-listener --tail=200
-kubectl -n bitcoin-mcast describe pod -l app.kubernetes.io/name=bitcoin-shard-proxy
+kubectl -n bsv-mcast logs -l app.kubernetes.io/name=shard-listener --tail=200
+kubectl -n bsv-mcast describe pod -l app.kubernetes.io/name=shard-proxy
 kubectl -n kube-system logs -l app=multus
 ```
